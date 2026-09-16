@@ -50,14 +50,11 @@ import { WelcomeBanner } from './components/WelcomeBanner';
 import LandingPage from './LandingPage';
 
 export default function App() {
-  // 1. ALL HOOKS MUST BE DECLARED FIRST AT THE TOP IN A CONSISTENT ORDER
-
-  // Check if visitor has already clicked to enter the OS during this session
+  // 1. ALL HOOKS DECLARED UNCONDITIONALLY AT THE TOP
   const [hasEntered, setHasEntered] = useState<boolean>(() => {
     return sessionStorage.getItem('os_entered') === 'true';
   });
 
-  // Active Context Mode
   const [activeMode, setActiveMode] = useState<ContextMode>(() => {
     const saved = localStorage.getItem('mom_activeMode');
     if (saved && (saved === 'family' || saved === 'business' || saved === 'marketing' || saved === 'self')) {
@@ -66,11 +63,9 @@ export default function App() {
     return 'family';
   });
 
-  // Full Page Navigation State
   const [currentFullView, setCurrentFullView] = useState<FullPageView>('none');
   const savedScrollPosition = useRef<number>(0);
 
-  // Currency
   const [currency, setCurrency] = useState<CurrencyCode>(() => {
     const saved = localStorage.getItem('mom_currency');
     if (saved && ['ZAR', 'USD', 'EUR', 'GBP', 'CAD', 'AUD'].includes(saved)) {
@@ -79,7 +74,6 @@ export default function App() {
     return 'USD';
   });
 
-  // Family & Kids Mode Toggle (Enabled by default)
   const [familyKidsMode, setFamilyKidsMode] = useState<boolean>(() => {
     const saved = localStorage.getItem('mom_familyKidsMode');
     if (saved !== null) {
@@ -88,7 +82,6 @@ export default function App() {
     return true;
   });
 
-  // Main State
   const [state, setState] = useState<MomOsState>(() => {
     try {
       const saved = localStorage.getItem('mom_os_state');
@@ -117,7 +110,6 @@ export default function App() {
     return INITIAL_STATE;
   });
 
-  // UI States
   const [showAllModes, setShowAllModes] = useState(false);
   const [isResetModalOpen, setIsResetModalOpen] = useState(false);
   const [isAddQuickModalOpen, setIsAddQuickModalOpen] = useState(false);
@@ -133,7 +125,6 @@ export default function App() {
 
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  // All Effects
   useEffect(() => {
     localStorage.setItem('mom_familyKidsMode', String(familyKidsMode));
   }, [familyKidsMode]);
@@ -150,24 +141,16 @@ export default function App() {
     localStorage.setItem('mom_currency', currency);
   }, [currency]);
 
-  // Handlers
   const handleEnterOS = () => {
     sessionStorage.setItem('os_entered', 'true');
     setHasEntered(true);
   };
 
-  // 2. CONDITIONAL RETURN IS PLACED AFTER ALL HOOKS ARE DEFINED
-  if (!hasEntered) {
-    return <LandingPage onEnterOS={handleEnterOS} />;
-  }
-
   const handleDismissWelcomeGuide = () => {
     setShowWelcomeGuide(false);
     try {
       localStorage.setItem('planner_welcome_dismissed', 'true');
-    } catch {
-      // ignore
-    }
+    } catch {}
   };
 
   const handleToggleWelcomeGuide = () => {
@@ -179,9 +162,7 @@ export default function App() {
         } else {
           localStorage.removeItem('planner_welcome_dismissed');
         }
-      } catch {
-        // ignore
-      }
+      } catch {}
       return next;
     });
   };
@@ -199,7 +180,6 @@ export default function App() {
     );
   };
 
-  // Toast Helper
   const showToast = (text: string, type: 'success' | 'error' | 'info' = 'success') => {
     const id = Date.now().toString();
     setToast({ id, text, type });
@@ -208,7 +188,6 @@ export default function App() {
     }, 3200);
   };
 
-  // Full-Page View Navigation Handlers
   const handleOpenFullView = (view: FullPageView) => {
     savedScrollPosition.current = window.scrollY || window.pageYOffset || 0;
     setCurrentFullView(view);
@@ -231,7 +210,6 @@ export default function App() {
     }
   };
 
-  // Schedule Actions
   const handleAddQuickScheduleItem = (title: string) => {
     const cleanTitle = title.replace(/^\+\s*/, '');
     const now = new Date();
@@ -313,7 +291,6 @@ export default function App() {
     }));
   };
 
-  // Custom Quick Adds
   const handleSaveCustomQuickAdd = (e: React.FormEvent) => {
     e.preventDefault();
     if (!customActionText.trim()) return;
@@ -349,7 +326,6 @@ export default function App() {
     });
   };
 
-  // Priority Actions
   const handleAddPriority = (
     text: string,
     mode?: ContextMode,
@@ -407,7 +383,6 @@ export default function App() {
     showToast('Cleared finished priorities');
   };
 
-  // Note Actions
   const handleAddNote = (
     text: string,
     mode?: ContextMode,
@@ -482,7 +457,6 @@ export default function App() {
     showToast(`Added child tag "${trimmed}"`);
   };
 
-  // Expense Actions
   const handleAddExpense = (
     text: string,
     amount: number,
@@ -528,7 +502,6 @@ export default function App() {
     }));
   };
 
-  // Contact Actions
   const handleAddContact = (contactData: Omit<ContactItem, 'id'>) => {
     const newContact: ContactItem = {
       ...contactData,
@@ -557,7 +530,6 @@ export default function App() {
     showToast('Contact removed');
   };
 
-  // Recipe Actions
   const handleAddRecipe = (recipeData: Omit<RecipeItem, 'id'>) => {
     const newRecipe: RecipeItem = {
       ...recipeData,
@@ -586,7 +558,6 @@ export default function App() {
     showToast('Recipe deleted');
   };
 
-  // Shopping List Actions
   const handleAddShoppingItem = (item: Omit<ShoppingListItem, 'id'>) => {
     const newItem: ShoppingListItem = {
       ...item,
@@ -643,7 +614,6 @@ export default function App() {
     showToast('Shopping list cleared');
   };
 
-  // Backup / Export
   const handleExport = () => {
     try {
       const dataStr =
@@ -660,7 +630,6 @@ export default function App() {
     }
   };
 
-  // Restore / Import
   const handleImportFile = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
@@ -716,6 +685,11 @@ export default function App() {
     marketing: state.schedule.filter((i) => i.mode === 'marketing').length,
     self: state.schedule.filter((i) => i.mode === 'self').length,
   };
+
+  // 2. SAFE INLINE TERNARY RENDERING TO GUARANTEE HOOK STABILITY
+  if (!hasEntered) {
+    return <LandingPage onEnterOS={handleEnterOS} />;
+  }
 
   return (
     <div className="min-h-screen bg-[#faf7f5] text-stone-800 pb-16">
