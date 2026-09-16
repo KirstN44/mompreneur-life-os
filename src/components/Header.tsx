@@ -2,6 +2,7 @@ import React, { useRef } from 'react';
 import { Printer, Download, Upload, RotateCcw, Calendar as CalendarIcon, Coins, Heart, Users, HelpCircle, Sparkles } from 'lucide-react';
 import { CurrencyCode } from '../types';
 import { CURRENCY_OPTIONS } from '../constants';
+import ShareButton from '../ShareButton';
 
 interface HeaderProps {
   currentDateStr: string;
@@ -115,7 +116,7 @@ export const Header: React.FC<HeaderProps> = ({
               <span>{showGuide ? 'Guide Open' : 'Guide'}</span>
             </button>
           )}
-
+            <ShareButton />
           <button
             id="btn-toolbar-print"
             onClick={onPrint}
