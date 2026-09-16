@@ -50,20 +50,12 @@ import { WelcomeBanner } from './components/WelcomeBanner';
 import LandingPage from './LandingPage';
 
 export default function App() {
+  // 1. ALL HOOKS MUST BE DECLARED FIRST AT THE TOP IN A CONSISTENT ORDER
+
   // Check if visitor has already clicked to enter the OS during this session
   const [hasEntered, setHasEntered] = useState<boolean>(() => {
     return sessionStorage.getItem('os_entered') === 'true';
   });
-
-  const handleEnterOS = () => {
-    sessionStorage.setItem('os_entered', 'true');
-    setHasEntered(true);
-  };
-
-  // If they haven't entered yet, show your storytelling landing page first!
-  if (!hasEntered) {
-    return <LandingPage onEnterOS={handleEnterOS} />;
-  }
 
   // Active Context Mode
   const [activeMode, setActiveMode] = useState<ContextMode>(() => {
@@ -95,23 +87,6 @@ export default function App() {
     }
     return true;
   });
-
-  useEffect(() => {
-    localStorage.setItem('mom_familyKidsMode', String(familyKidsMode));
-  }, [familyKidsMode]);
-
-  const handleToggleFamilyKidsMode = (enabled: boolean) => {
-    setFamilyKidsMode(enabled);
-    if (!enabled && activeMode === 'family') {
-      setActiveMode('business');
-    }
-    showToast(
-      enabled
-        ? 'Family & Kids Mode enabled'
-        : 'Family & Kids Mode hidden for focused solopreneur/business mode',
-      'info'
-    );
-  };
 
   // Main State
   const [state, setState] = useState<MomOsState>(() => {
@@ -156,6 +131,36 @@ export default function App() {
     }
   });
 
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
+  // All Effects
+  useEffect(() => {
+    localStorage.setItem('mom_familyKidsMode', String(familyKidsMode));
+  }, [familyKidsMode]);
+
+  useEffect(() => {
+    localStorage.setItem('mom_os_state', JSON.stringify(state));
+  }, [state]);
+
+  useEffect(() => {
+    localStorage.setItem('mom_activeMode', activeMode);
+  }, [activeMode]);
+
+  useEffect(() => {
+    localStorage.setItem('mom_currency', currency);
+  }, [currency]);
+
+  // Handlers
+  const handleEnterOS = () => {
+    sessionStorage.setItem('os_entered', 'true');
+    setHasEntered(true);
+  };
+
+  // 2. CONDITIONAL RETURN IS PLACED AFTER ALL HOOKS ARE DEFINED
+  if (!hasEntered) {
+    return <LandingPage onEnterOS={handleEnterOS} />;
+  }
+
   const handleDismissWelcomeGuide = () => {
     setShowWelcomeGuide(false);
     try {
@@ -181,20 +186,18 @@ export default function App() {
     });
   };
 
-  const fileInputRef = useRef<HTMLInputElement>(null);
-
-  // Sync to localStorage
-  useEffect(() => {
-    localStorage.setItem('mom_os_state', JSON.stringify(state));
-  }, [state]);
-
-  useEffect(() => {
-    localStorage.setItem('mom_activeMode', activeMode);
-  }, [activeMode]);
-
-  useEffect(() => {
-    localStorage.setItem('mom_currency', currency);
-  }, [currency]);
+  const handleToggleFamilyKidsMode = (enabled: boolean) => {
+    setFamilyKidsMode(enabled);
+    if (!enabled && activeMode === 'family') {
+      setActiveMode('business');
+    }
+    showToast(
+      enabled
+        ? 'Family & Kids Mode enabled'
+        : 'Family & Kids Mode hidden for focused solopreneur/business mode',
+      'info'
+    );
+  };
 
   // Toast Helper
   const showToast = (text: string, type: 'success' | 'error' | 'info' = 'success') => {
@@ -1124,4 +1127,3 @@ export default function App() {
     </div>
   );
 }
-// Trigger deploy
