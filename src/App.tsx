@@ -9,7 +9,7 @@ import {
   ChevronRight,
   BookOpen,
   BookUser,
-  UtensilsCrossed,
+  UtensilsCrossed
 } from 'lucide-react';
 import {
   ContextMode,
