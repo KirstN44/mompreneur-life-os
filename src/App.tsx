@@ -1,15 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import {
-  Calendar,
-  Sparkles,
-  Target,
-  Receipt,
-  Maximize2,
-  ChevronRight,
-  BookOpen,import React, { useState, useEffect, useRef } from 'react';
-import { motion, AnimatePresence } from 'motion/react';
-import {
+import { 
   Calendar,
   Sparkles,
   Target,
