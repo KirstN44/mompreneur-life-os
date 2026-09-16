@@ -1,0 +1,86 @@
+@import "tailwindcss";
+
+@layer base {
+  body {
+    font-family: 'Plus Jakarta Sans', system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  }
+  
+  h1, h2, h3, .font-serif-heading {
+    font-family: 'Fraunces', Georgia, serif;
+  }
+}
+
+/* Planner Refill Page Background Patterns */
+.planner-dot-grid {
+  background-image: radial-gradient(#d6d3d1 1px, transparent 1px);
+  background-size: 18px 18px;
+}
+
+.planner-lined-paper {
+  background-image: linear-gradient(#e7e5e4 1px, transparent 1px);
+  background-size: 100% 28px;
+  line-height: 28px;
+}
+
+.planner-paper-sheet {
+  background-color: #fdfdfc;
+  box-shadow: 0 4px 20px -2px rgba(44, 39, 36, 0.06), 0 1px 4px 0 rgba(44, 39, 36, 0.04);
+}
+
+@media print {
+  @page {
+    size: auto;
+    margin: 12mm 10mm 12mm 10mm;
+  }
+
+  body {
+    background-color: #ffffff !important;
+    background-image: none !important;
+    color: #1c1917 !important;
+    padding: 0 !important;
+    font-size: 12pt !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+
+  .no-print,
+  nav,
+  header.sticky,
+  button:not(.print-include),
+  input[type="text"],
+  input[type="search"],
+  .modal-backdrop,
+  #toast-container {
+    display: none !important;
+  }
+
+  .print-only {
+    display: block !important;
+  }
+
+  .print-grid-2col {
+    display: grid !important;
+    grid-template-columns: 1fr 1fr !important;
+    gap: 16px !important;
+  }
+
+  .print-break-inside-avoid {
+    break-inside: avoid !important;
+    page-break-inside: avoid !important;
+  }
+
+  .planner-paper-sheet {
+    box-shadow: none !important;
+    border: 1px solid #78716c !important;
+    padding: 16px !important;
+    margin: 0 !important;
+    width: 100% !important;
+    max-width: 100% !important;
+  }
+
+  .card-print {
+    border: 1px solid #78716c !important;
+    box-shadow: none !important;
+    background: transparent !important;
+  }
+}
